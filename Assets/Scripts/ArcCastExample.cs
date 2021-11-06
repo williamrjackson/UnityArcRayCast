@@ -1,30 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ArcCastExample : MonoBehaviour {
 
     public LineRenderer line;
+    [Range(0f, 100f)]
+    public float reach = 10f;
+    public LayerMask layerMask;
     public Transform marker;
 	
-	// Update is called once per frame
 	void Update () {
         RaycastHit hit;
-        List<Vector3> arcPositions = ArcCast.Cast(transform.position, transform.forward, out hit);
+        List<Vector3> arcPositions = ArcCast.Cast(transform.position, transform.forward, layerMask, out hit, reach:reach);
         line.positionCount = arcPositions.Count;
         print(arcPositions.Count);
         line.SetPositions(arcPositions.ToArray());
         if (hit.collider)
         {
             print(hit.collider.name);
-            if (marker.localScale.magnitude < 0)
-                marker.localScale = Vector3.one;
+            marker.localScale = Vector3.one;
             marker.position = hit.point;
         }
         else
         {
-            if (marker.localScale.magnitude > 0)
-                marker.localScale = Vector3.zero;
+            marker.localScale = Vector3.zero;
         }
 	}
 }
