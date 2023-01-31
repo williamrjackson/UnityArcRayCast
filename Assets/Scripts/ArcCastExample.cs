@@ -3,15 +3,17 @@ using UnityEngine;
 
 public class ArcCastExample : MonoBehaviour {
 
+    public Vector3 gravityOverride = Physics.gravity;
     public LineRenderer line;
     [Range(0f, 100f)]
     public float reach = 10f;
     public LayerMask layerMask;
     public Transform marker;
-	
-	void Update () {
+
+
+    void Update () {
         RaycastHit hit;
-        List<Vector3> arcPositions = ArcCast.Cast(transform.position, transform.forward, layerMask, out hit, reach:reach);
+        List<Vector3> arcPositions = ArcCast.Cast(transform.position, transform.forward, layerMask, out hit, gravityOverride, reach:reach);
         line.positionCount = arcPositions.Count;
         print(arcPositions.Count);
         line.SetPositions(arcPositions.ToArray());
