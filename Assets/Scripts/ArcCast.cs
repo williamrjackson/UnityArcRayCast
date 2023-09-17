@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace ArcCast
 {
-
     public static class ArcCast {
 
         private const float DEFAULT_EXTENDED_FLIGHT_TIME = .25f;
@@ -21,7 +20,8 @@ namespace ArcCast
         public static List<Vector3> Cast(Vector3 startPos, Vector3 direction, LayerMask layerMask, out RaycastHit hit, float reach = DEFAULT_REACH, float extendedFlightTime = DEFAULT_EXTENDED_FLIGHT_TIME, uint segments = DEFAULT_SEGMENTS)
         {
             return CastArc(startPos, direction, layerMask, out hit, reach, segments, Physics.gravity, extendedFlightTime);
-        }    public static List<Vector3> Cast(Vector3 startPos, Vector3 direction, LayerMask layerMask, out RaycastHit hit, Vector3 gravity, float reach = DEFAULT_REACH, float extendedFlightTime = DEFAULT_EXTENDED_FLIGHT_TIME, uint segments = DEFAULT_SEGMENTS)
+        }    
+        public static List<Vector3> Cast(Vector3 startPos, Vector3 direction, LayerMask layerMask, out RaycastHit hit, Vector3 gravity, float reach = DEFAULT_REACH, float extendedFlightTime = DEFAULT_EXTENDED_FLIGHT_TIME, uint segments = DEFAULT_SEGMENTS)
         {
             return CastArc(startPos, direction, layerMask, out hit, reach, segments, gravity, extendedFlightTime);
         }
