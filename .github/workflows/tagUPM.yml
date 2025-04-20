@@ -10,7 +10,7 @@ permissions: write-all
 jobs:
   version_tag:
     runs-on: ubuntu-latest
-    name: Test Job
+    name: Version Tag UPM
     steps:
       - name: Check out files
         uses: actions/checkout@v3
