@@ -1,0 +1,79 @@
+on:
+  push:
+    branches:
+      - 'main'
+      - 'master'
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+permissions: write-all
+
+jobs:
+  version_tag:
+    runs-on: ubuntu-latest
+    name: Test Job
+    steps:
+      - name: Check out files
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: |
+            README.md
+            package.json
+
+      - name: Get version
+        id: version
+        uses: williamrjackson/upm_version_increment_action@v1.0.1
+        with: 
+          path: package.json
+          increment: none
+      - name: tag-exists-action
+        id: check-tag
+        uses: mukunku/tag-exists-action@v1.2.0
+        with: 
+          tag: 'v${{steps.version.outputs.version}}'
+      - name: Get result
+        run: echo "Tag ${{steps.check-tag.outputs.exists}}"
+      - name: gitconfig
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: Set version
+        if: ${{ steps.check-tag.outputs.exists }}
+        id: increment
+        uses: williamrjackson/upm_version_increment_action@v1.0.1
+        with: 
+          path: package.json
+          increment: patch
+      - name: UpdateReadmeA 
+        if: ${{ steps.check-tag.outputs.exists }}
+        uses: williamrjackson/upm_readme_tag_link_action@v1.0.1
+        with:
+          path: README.md
+          major: ${{ steps.increment.outputs.major }}
+          minor: ${{ steps.increment.outputs.minor }}
+          patch: ${{ steps.increment.outputs.patch }}
+      - name: UpdateReadmeB
+        if: ${{ !steps.check-tag.outputs.exists }}
+        uses: williamrjackson/upm_readme_tag_link_action@v1.0.1
+        with:
+          path: README.md
+          major: ${{ steps.version.outputs.major }}
+          minor: ${{ steps.version.outputs.minor }}
+          patch: ${{ steps.version.outputs.patch }}
+      - name: commit changes
+        run: |
+          git add .
+          git commit -m "automated version tagging Readme Update [skip ci]"
+      - name: push
+        run: git push
+      - name: tagA
+        if: ${{ steps.check-tag.outputs.exists }}
+        run: |
+          git tag -f v${{ steps.increment.outputs.major }}.${{ steps.increment.outputs.minor }}
+          git tag -f v${{ steps.increment.outputs.major }}.${{ steps.increment.outputs.minor }}.${{ steps.increment.outputs.patch }}
+      - name: tagB
+        if: ${{ !steps.check-tag.outputs.exists }}
+        run: |
+          git tag -f v${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}
+          git tag -f v${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}
+      - name: push tags
+        run: git push -f --tags
