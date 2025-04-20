@@ -2,7 +2,7 @@
 Arc raycast utility using projectile formulas   
 
 Add to projects using Package Manager git url:  
-`https://github.com/williamrjackson/UnityArcRayCast.git#v1.0.2`   
+`https://github.com/williamrjackson/UnityArcRayCast.git#v1.0.3`   
 OR   
 `https://github.com/williamrjackson/UnityArcRayCast.git#v1.0`
 
